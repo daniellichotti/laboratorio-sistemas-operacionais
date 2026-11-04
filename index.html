@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Laboratório de Instalação</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: catálogo de bancada — cabeçalho curto, grade de cards-monitor, cada um com uma mini tela do instalador */
+:root{
+  --bg:#eef0f3; --panel:#ffffff; --fg:#17202b; --muted:#5b6675; --line:#d7dce3;
+  --accent:#0a6cbd; --accent-soft:#e3eefa; --ok:#1f8a4c; --soon:#8a5a00; --soon-bg:#fbefd5; --bezel:#1c2026;
+  --f-ui:"Instrument Sans",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1317; --panel:#171c22; --fg:#e6ebf1; --muted:#97a2b0; --line:#2a323c;
+  --accent:#5aa9ec; --accent-soft:#16283a; --ok:#4cc184; --soon:#f0c06a; --soon-bg:#33270f; --bezel:#05070a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1317; --panel:#171c22; --fg:#e6ebf1; --muted:#97a2b0; --line:#2a323c;
+  --accent:#5aa9ec; --accent-soft:#16283a; --ok:#4cc184; --soon:#f0c06a; --soon-bg:#33270f; --bezel:#05070a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:36px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:32px}
+.top{display:flex;flex-direction:column;gap:10px;max-width:68ch}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);letter-spacing:.04em}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.1;margin:0;letter-spacing:-.02em;text-wrap:balance}
+.top p{margin:0;color:var(--muted);font-size:1.02rem}
+.bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px}
+.bar h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:600}
+.bar span{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s}
+a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+a.card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){a.card:hover{transform:none}}
+.mon{background:var(--bezel);padding:10px 10px 18px;position:relative}
+.mon::after{content:"";position:absolute;bottom:6px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#2fd06a}
+.card.soon .mon::after{background:#555}
+.scr{aspect-ratio:16/9;border-radius:2px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+/* mini tela Windows */
+.scr.win{background:radial-gradient(120% 90% at 20% 10%,#3a4bb0,#1b2466 45%,#0d1240)}
+.scr.win .d{width:66%;background:#f3f3f3;border-radius:4px;box-shadow:0 6px 18px rgba(0,0,0,.4);overflow:hidden}
+.scr.win .d i{display:block}
+.scr.win .t{height:9px;border-bottom:1px solid #ddd}
+.scr.win .r{height:5px;margin:7px 10px;background:#cfd3d9;border-radius:2px}
+.scr.win .r.a{width:55%}.scr.win .r.b{width:80%}.scr.win .r.c{width:70%}
+.scr.win .f{height:16px;background:#e8e8e8;display:flex;justify-content:flex-end;align-items:center;padding-right:8px}
+.scr.win .f b{width:30px;height:8px;background:#0067c0;border-radius:2px}
+/* mini tela Ubuntu */
+.scr.ubu{background:linear-gradient(135deg,#2c0f2e,#5b1d4a 55%,#c4501f)}
+.scr.ubu .d{width:66%;background:#fafafa;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.4);display:grid;grid-template-columns:28% 1fr;overflow:hidden;height:62%}
+.scr.ubu .s{background:#ececec;display:flex;flex-direction:column;gap:5px;padding:9px 7px}
+.scr.ubu .s i{height:4px;background:#c9c9c9;border-radius:2px}.scr.ubu .s i:nth-child(2){background:#e95420}
+.scr.ubu .m{padding:10px;display:flex;flex-direction:column;gap:6px}
+.scr.ubu .m i{height:5px;background:#d3d3d3;border-radius:2px}.scr.ubu .m i:first-child{width:60%;height:7px;background:#9a9a9a}
+.scr.ubu .m b{margin-top:auto;align-self:flex-end;width:30px;height:8px;background:#e95420;border-radius:3px}
+.body{padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.hd{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.hd h3{margin:0;font-size:1.22rem;letter-spacing:-.01em;line-height:1.2}
+.ver{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);display:block;margin-top:3px}
+.pill{flex:none;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px}
+.pill.on{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.pill.soon{background:var(--soon-bg);color:var(--soon)}
+.desc{margin:0;color:var(--muted);font-size:.93rem}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;border-top:1px solid var(--line);padding-top:12px}
+.meta div{min-width:0}
+.meta dt{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.meta dd{margin:0;font-family:var(--f-mono);font-size:.86rem;font-variant-numeric:tabular-nums}
+.tags{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.tags li{font-size:.78rem;border:1px solid var(--line);border-radius:5px;padding:1px 7px;color:var(--muted)}
+.cta{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.92rem;color:var(--accent);padding-top:4px}
+.card.soon .cta{color:var(--muted);font-weight:500}
+.card.soon{border-style:dashed}
+footer{color:var(--muted);font-size:.85rem;max-width:68ch}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <section class="top">
+    <span class="eyebrow">bancada de treino · sem risco ao seu PC</span>
+    <h1>Laboratório de Instalação</h1>
+    <p>Simuladores interativos para treinar formatação e instalação de sistemas operacionais, tela por tela, com explicação de cada decisão. Discos, chaves e senhas são todos fictícios.</p>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:16px">
+    <div class="bar"><h2>Simuladores</h2><span id="count"></span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <footer>Novos sistemas entram aqui conforme os simuladores ficam prontos. Cada card abre o simulador; dentro dele, o botão “Laboratório” traz você de volta.</footer>
+</div>
+
+<script>
+const SIMS=[
+  {id:'win11',nome:'Windows 11',ver:'Instalação limpa via pendrive',tela:'win',status:'on',
+   url:'simulador-win11.html',
+   desc:'Do menu de boot UEFI à área de trabalho: escolha de edição, exclusão e criação de partições, cópia dos arquivos e configuração inicial.',
+   etapas:8,tempo:'~6 min',nivel:'Básico',tags:['Boot UEFI','Particionamento GPT','Conta local','Privacidade']},
+  {id:'ubuntu',nome:'Ubuntu LTS',ver:'26.04 LTS · Resolute Raccoon',tela:'ubu',status:'on',url:'simulador-ubuntu.html',
+   desc:'Do GRUB do pendrive ao primeiro login: dual boot com Windows, particionamento manual, LVM e criptografia, conta e fuso horário.',
+   etapas:8,tempo:'~6 min',nivel:'Intermediário',tags:['GRUB','Dual boot','ext4 / LVM','Criptografia LUKS']}
+];
+const mini={
+  win:'<div class="d"><i class="t"></i><i class="r a"></i><i class="r b"></i><i class="r c"></i><i class="f"><b></b></i></div>',
+  ubu:'<div class="d"><div class="s"><i></i><i></i><i></i><i></i></div><div class="m"><i></i><i></i><i></i><b></b></div></div>'
+};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const g=document.getElementById('grid');
+g.innerHTML=SIMS.map(s=>{
+  const on=s.status==='on'&&s.url, tag=on?'a':'article';
+  const attrs=on?` href="${esc(s.url)}"`:' aria-disabled="true"';
+  return `<${tag} class="card ${on?'':'soon'}"${attrs}>
+    <div class="mon"><div class="scr ${s.tela}" aria-hidden="true">${mini[s.tela]}</div></div>
+    <div class="body">
+      <div class="hd"><div><h3>${esc(s.nome)}</h3><span class="ver">${esc(s.ver)}</span></div><span class="pill ${on?'on':'soon'}">${on?'Disponível':'Em breve'}</span></div>
+      <p class="desc">${esc(s.desc)}</p>
+      <ul class="tags">${s.tags.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+      <dl class="meta"><div><dt>Etapas</dt><dd>${s.etapas}</dd></div><div><dt>Duração</dt><dd>${esc(s.tempo)}</dd></div><div><dt>Nível</dt><dd>${esc(s.nivel)}</dd></div></dl>
+      <div class="cta">${on?'Abrir simulador <span aria-hidden="true">→</span>':'Em construção'}</div>
+    </div></${tag}>`}).join('');
+const n=SIMS.filter(s=>s.status==='on').length;
+document.getElementById('count').textContent=`${n} disponível · ${SIMS.length-n} em breve`;
+</script>
+
+</body>
+</html>
